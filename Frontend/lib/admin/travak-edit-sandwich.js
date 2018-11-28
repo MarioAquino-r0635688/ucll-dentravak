@@ -14,11 +14,20 @@ class DenTravakEditSandwich extends DenTravakAbstractElement {
 
     initEventListeners() {
         this.byId('save-btn').addEventListener('click', e => this.saveSandwich());
-        this.byId('cancel-btn').addEventListener('click', e => this.app().showSandwichList());
+        this.byId('cancel-btn').addEventListener('click', e => this.app().showSandwichList({}));
     }
 
     saveSandwich() {
-        //todo: call backend via fetch api and save sandwich
+        fetch('http://127.0.0.1:8080/sandwiches' , {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                // "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: '{"name":"' + this.byId('name').value + '", "ingredients":"' + this.byId('ingredients').value + '", "price":' + this.byId('price').value + '}',
+            
+        }).then(rsp => rsp.json());
+        
         this.app().dispatchEvent(new CustomEvent('save-succeeded', {detail: this.sandwich}));
     }
 

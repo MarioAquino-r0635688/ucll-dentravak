@@ -6,6 +6,8 @@ import be.ucll.da.dentravak.model.SandwichOrder;
 import be.ucll.da.dentravak.model.SandwichTestBuilder;
 import be.ucll.da.dentravak.repositories.SandwichOrderRepository;
 import be.ucll.da.dentravak.repositories.SandwichRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +15,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.io.IOException;
 
 import static be.ucll.da.dentravak.model.SandwichOrderTestBuilder.aSandwichOrder;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
@@ -53,8 +57,18 @@ public class SandwichOrderControllerIntegrationTest extends AbstractControllerIn
     }
 
     @Test
-    public void testGetSandwichOrders_WithOrdersSaved_ReturnsListWithOrders() throws JSONException {
-        throw new RuntimeException("Implement this test and then the production code");
+    public void testGetSandwichOrders_WithOrdersSaved_ReturnsListWithOrders() throws JSONException, IOException {
+        SandwichOrder sandwichOrder = aSandwichOrder().forSandwich(savedSandwich).withBreadType(SandwichOrder.BreadType.BOTERHAMMEKES).withMobilePhoneNumber("0487/123456").build();
+        SandwichOrder sandwichOrder2 = aSandwichOrder().forSandwich(savedSandwich).withBreadType(SandwichOrder.BreadType.WRAP).withMobilePhoneNumber("0487/123456").build();
+        SandwichOrder ordered1 = new ObjectMapper().registerModule(new JavaTimeModule()).readValue(httpPost("/orders", sandwichOrder), SandwichOrder.class);
+        SandwichOrder ordered2 = new ObjectMapper().registerModule(new JavaTimeModule()).readValue(httpPost("/orders", sandwichOrder2), SandwichOrder.class);
+
+        String expected = "[{\"id\":\"${json-unit.ignore}\",\"sandwichId\":\"${json-unit.ignore}\",\"name\":\"Americain\",\"breadType\":\"BOTERHAMMEKES\",\"creationDate\":\"${json-unit.ignore}\",\"price\":3.50,\"mobilePhoneNumber\":\"0487/123456\"} , {\"id\":\"${json-unit.ignore}\",\"sandwichId\":\"${json-unit.ignore}\",\"name\":\"Americain\",\"breadType\":\"WRAP\",\"creationDate\":\"${json-unit.ignore}\",\"price\":3.50,\"mobilePhoneNumber\":\"0487/123456\"}]";
+        String result = httpGet("/orders");
+        System.out.println(expected + "\n" + result);
+        assertThatJson(result).isEqualTo(expected);
     }
+
+
 
 }

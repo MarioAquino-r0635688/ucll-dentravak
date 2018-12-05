@@ -6,9 +6,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
 public class SandwichController {
-//
+
     private SandwichRepository repository;
 
     public SandwichController(SandwichRepository repository) {

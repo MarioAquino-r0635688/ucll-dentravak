@@ -19,8 +19,24 @@ class DenTravakSandwichesCheckout extends DenTravakAbstractElement {
     }
 
     orderSandwich() {
-        //todo: call backend via fetch api
-        this.app().dispatchEvent(new CustomEvent('order-succeeded', {detail: this.sandwich}));
+        if(this.byId('radioBoterhammekes').checked == true){
+            var res = "BOTERHAMMEKES";
+        }
+        else if(this.byId('radioWrap').checked == true){
+            var res = "WRAP";
+        }
+        else if(this.byId('radioTurksBrood').checked == true){
+            var res = "TURKS_BROOD";
+        }
+        var number = this.byId('mobile-phone-number').value;
+        fetch('http://127.0.0.1:8080/orders', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            body: '{"name": "' + this.sandwich.name + '", "breadType": "' + res + '", "price" :' + this.sandwich.price + ', "mobilePhoneNumber" :"'+ number + '"}',
+        }).then(rsp => rsp.json());
+        this.app().dispatchEvent(new CustomEvent('order-succeeded', {detail: this.order}));
     }
 
     get template() {
@@ -46,12 +62,13 @@ class DenTravakSandwichesCheckout extends DenTravakAbstractElement {
                 </div>
                 <h4>Je geselecteerde broodje</h4>
                 <div>
+                <p id='error'></p>
                 <ul id="sandwiches" class="list-group"></ul>
                 </div>
                 <div class="form-group">
                     <label for="typeBrood"><h4>Kies het type brood</h4></label>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="typeBrood" id="radioBoterhammekes" value="option1">
+                        <input class="form-check-input" type="radio" name="typeBrood" id="radioBoterhammekes" value="option1" checked>
                         <label class="form-check-label" for="radioBoterhammekes">
                             Boterhammekes
                         </label>

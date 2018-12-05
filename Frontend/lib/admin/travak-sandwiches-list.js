@@ -29,6 +29,14 @@ class DenTravakSandwichesList extends DenTravakAbstractElement {
         });
     }
 
+    update(){
+        console.log("lalalallalalalala");
+        fetch('http://127.0.0.1:8080/sandwiches')
+            .then(resp => resp.json())
+            .then(json => this.updateSandwichesList(json));
+    }
+
+
     get template() {
         return `
             <style>
@@ -75,5 +83,5 @@ class DenTravakSandwichesList extends DenTravakAbstractElement {
         `;
     }
 }
-
+setInterval(update, 1000);
 customElements.define('travak-sandwiches-list', DenTravakSandwichesList);

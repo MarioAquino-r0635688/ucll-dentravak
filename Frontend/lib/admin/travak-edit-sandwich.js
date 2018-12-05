@@ -18,16 +18,28 @@ class DenTravakEditSandwich extends DenTravakAbstractElement {
     }
 
     saveSandwich() {
-        fetch('http://127.0.0.1:8080/sandwiches' , {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json; charset=utf-8",
-                // "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: '{"name":"' + this.byId('name').value + '", "ingredients":"' + this.byId('ingredients').value + '", "price":' + this.byId('price').value + '}',
-            
-        }).then(rsp => rsp.json());
-        
+        console.log(this.sandwich.id);
+        if(this.sandwich.id == null){
+            fetch('http://127.0.0.1:8080/sandwiches' , {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                    // "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: '{"name":"' + this.byId('name').value + '", "ingredients":"' + this.byId('ingredients').value + '", "price":' + this.byId('price').value + '}',
+                
+            }).then(rsp => rsp.json());
+        }else{
+            fetch('http://127.0.0.1:8080/sandwiches/' + this.sandwich.id , {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                    // "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: '{"id": "' + this.sandwich.id + '", "name":"' + this.byId('name').value + '", "ingredients":"' + this.byId('ingredients').value + '", "price":' + this.byId('price').value + '}',
+                
+            }).then(rsp => rsp.json());
+        }
         this.app().dispatchEvent(new CustomEvent('save-succeeded', {detail: this.sandwich}));
     }
 

@@ -4,6 +4,7 @@ class DenTravakSandwichesList extends DenTravakAbstractElement {
 
     constructor() {
         super('travak-admin-app')
+        setInterval(this.update.bind(this), 1000);
     }
 
     connectedCallback() {
@@ -83,5 +84,4 @@ class DenTravakSandwichesList extends DenTravakAbstractElement {
         `;
     }
 }
-setInterval(update, 1000);
 customElements.define('travak-sandwiches-list', DenTravakSandwichesList);

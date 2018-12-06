@@ -4,6 +4,7 @@ class DenTravakOrderList extends DenTravakAbstractElement {
 
     constructor() {
         super('travak-admin-app')
+        setInterval(this.update.bind(this), 1000);
     }
 
     connectedCallback() {
@@ -12,6 +13,12 @@ class DenTravakOrderList extends DenTravakAbstractElement {
             .then(resp => resp.json())
             .then(json => this.updateOrderList(json));
         this.initEventListeners();
+    }
+
+    update(){
+        fetch('http://127.0.0.1:8080/orders')
+            .then(resp => resp.json())
+            .then(json => this.updateOrderList(json));
     }
 
     initEventListeners() {

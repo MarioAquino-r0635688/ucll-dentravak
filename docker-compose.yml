@@ -16,7 +16,7 @@ services:
       - mysql
     restart: unless-stopped
     ports:
-      - 8234:8080
+      - 8080:8080
     environment:
       - spring.profiles.active=container
       - DATABASE_HOST=mysql
@@ -24,3 +24,9 @@ services:
       - DATABASE_PASSWORD=dbp4ss
       - DATABASE_NAME=den-travak-app
       - DATABASE_PORT=3306
+  recommendation:
+    image: recommendation-app:0.0.1-SNAPSHOT
+    restart: unless-stopped
+    ports: 8081:8081
+    environment:
+      - spring.profiles.active=recommendation

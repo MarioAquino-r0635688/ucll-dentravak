@@ -27,6 +27,7 @@ services:
   recommendation:
     image: recommendation-app:0.0.1-SNAPSHOT
     restart: unless-stopped
-    ports: 8081:8081
+    ports:
+      -8081:8081
     environment:
       - spring.profiles.active=recommendation

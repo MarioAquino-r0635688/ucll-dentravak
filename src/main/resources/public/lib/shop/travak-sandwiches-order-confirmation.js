@@ -7,12 +7,28 @@ class DenTravakSandwichesOrderConfirmation extends DenTravakAbstractElement {
         this.initEventListeners();
     }
 
-    init(sandwich) {
-        this.sandwich = sandwich;
+    init(order) {
+        this.order = order;
     }
 
     initEventListeners() {
         this.byId('show-sandwich-list').addEventListener('click', e => this.app().dispatchEvent(new Event('show-sandwich-list')));
+        this.byId('rating').addEventListener('change', e => {
+            this.postPreference(this.order);
+        });
+    }
+
+    postPreference(order){
+        console.log("postPreference");
+        var select = this.byId('rating');
+        var score = select.options[select.selectedIndex].value;
+        fetch('http://127.0.0.1:8081/recommend', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            body: '{"emailAddress": "test@ucll.be", "ratedItem" : "' + order.sandwichId + '", "rating" : "' + score + '"}',
+        }).then(rsp => rsp.json());
     }
 
     get template() {
@@ -39,6 +55,16 @@ class DenTravakSandwichesOrderConfirmation extends DenTravakAbstractElement {
                 <h4>Bedankt!</h4>
                 <p>Wij hebben je bestelling goed ontvangen en je kan je broodje komen ophalen vanaf 11u45.</p>
                 <p>Tot zo dadelijk!</p>
+                <p>Rate uw broodje</p>
+                <div>
+                    <select id="rating">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select> 
+                </div>
             </div>
         `;
     }

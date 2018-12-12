@@ -13,9 +13,24 @@ class DenTravakApp extends DenTravakAbstractElement {
 
     initEventListeners() {
         this.addEventListener('checkout', (e) => this.showCheckoutPage(e.detail));
+       // this.addEventListener('rate', (e) =>this.postPreference(e.detail));
         this.addEventListener('order-succeeded', (e) => this.showOrderConfirmationPage(e.detail));
         this.addEventListener('show-sandwich-list', (e) => this.showSandwichList());
+       // this.addEventListener('show-rate', (e) => this.postPreference(e.detail));
     }
+    /*
+    postPreference(order){
+        console.log("postPreference");
+        var select = this.byId('rating');
+        var score = select.options[select.selectedIndex].value;
+        fetch('http://127.0.0.1:8081/recommend', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            body: '{"emailAddress": "test@ucll.be", "ratedItem" : "' + order.sandwichId + '" "rating" : "' + score + '"}',
+        }).then(rsp => rsp.json());
+    }*/
 
     showSandwichList() {
         this.byCss(`travak-sandwiches-list`).classList.remove('hidden');
@@ -30,8 +45,8 @@ class DenTravakApp extends DenTravakAbstractElement {
         this.byCss(`travak-sandwiches-order-confirmation`).classList.add('hidden');
     }
 
-    showOrderConfirmationPage(sandwich) {
-        this.byCss(`travak-sandwiches-order-confirmation`).init(sandwich);
+    showOrderConfirmationPage(order) {
+        this.byCss(`travak-sandwiches-order-confirmation`).init(order);
         this.byCss(`travak-sandwiches-list`).classList.add('hidden');
         this.byCss(`travak-sandwiches-checkout`).classList.add('hidden');
         this.byCss(`travak-sandwiches-order-confirmation`).classList.remove('hidden');

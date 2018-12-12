@@ -18,25 +18,34 @@ class DenTravakSandwichesCheckout extends DenTravakAbstractElement {
         this.byId('back-button').addEventListener('click', e => this.app().showSandwichList());
     }
 
-    orderSandwich() {
+    createOrder() {
+        let order = {};
+        order.name = this.sandwich.name;
+        
         if(this.byId('radioBoterhammekes').checked == true){
-            var res = "BOTERHAMMEKES";
+            order.breadType = "BOTERHAMMEKES";
         }
         else if(this.byId('radioWrap').checked == true){
-            var res = "WRAP";
+            order.breadType =  "WRAP";
         }
         else if(this.byId('radioTurksBrood').checked == true){
-            var res = "TURKS_BROOD";
+            order.breadType =  "TURKS_BROOD";
         }
-        var number = this.byId('mobile-phone-number').value;
+        order.mobilePhoneNumber = this.byId('mobile-phone-number').value;
+        order.sandwichId = this.sandwich.id;
+        return order;
+    }
+
+    orderSandwich() {
+        var order = this.createOrder();
         fetch('http://127.0.0.1:8080/orders', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json; charset=utf-8"
             },
-            body: '{"name": "' + this.sandwich.name + '", "breadType": "' + res + '", "price" :' + this.sandwich.price + ', "mobilePhoneNumber" :"'+ number + '"}',
+            body: '{"name": "' + order.name + '", "breadType": "' + order.breadType + '", "price" :' + this.sandwich.price + ', "mobilePhoneNumber" :"'+ order.mobilePhoneNumber + '", "sandwichId" : "' + order.sandwichId + '"}',
         }).then(rsp => rsp.json());
-        this.app().dispatchEvent(new CustomEvent('order-succeeded', {detail: this.order}));
+        this.app().dispatchEvent(new CustomEvent('order-succeeded', {detail: order}));
     }
 
     get template() {

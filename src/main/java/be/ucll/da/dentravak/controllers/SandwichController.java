@@ -1,24 +1,65 @@
 package be.ucll.da.dentravak.controllers;
 
 import be.ucll.da.dentravak.model.Sandwich;
+import be.ucll.da.dentravak.model.SandwichPreferences;
 import be.ucll.da.dentravak.repositories.SandwichRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.UUID;
+import javax.naming.ServiceUnavailableException;
+import java.math.BigDecimal;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import org.assertj.core.util.Lists;
+
+import static org.hibernate.internal.util.collections.ArrayHelper.toList;
 
 @CrossOrigin
 @RestController
 public class SandwichController {
 
+   /* @Inject
+    private DiscoveryClient discoveryClient;*/
+
+    @Autowired
     private SandwichRepository repository;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+ //   private SandwichRepository repository;
 
     public SandwichController(SandwichRepository repository) {
         this.repository = repository;
+        Sandwich sandwich = new Sandwich();
+        sandwich.setName("kip hawaii");
+        sandwich.setIngredients("kip, curry");
+        sandwich.setPrice(new BigDecimal("5.0"));
+        Sandwich s = new Sandwich();
+        s.setName("boulet");
+        s.setIngredients("boulet, mayo");
+        s.setPrice(new BigDecimal("8.3"));
+        repository.save(sandwich);
+        repository.save(s);
     }
 
     @RequestMapping("/sandwiches")
     public Iterable<Sandwich> sandwiches() {
-        return repository.findAll();
+        try {
+            SandwichPreferences preferences = getPreferences("test@ucll.be");
+            if(preferences != null){
+                return getSandwichesSortedByRecommendations("test@ucll.be");
+            }
+            return repository.findAll();
+        } catch (ServiceUnavailableException e) {
+            return repository.findAll();
+        }
     }
 
     @RequestMapping(value = "/sandwiches", method = RequestMethod.POST)
@@ -32,4 +73,44 @@ public class SandwichController {
         return repository.save(sandwich);
     }
 
+    @GetMapping("/getpreferences/{emailAddress}")
+    public SandwichPreferences getPreferences(@PathVariable String emailAddress) throws RestClientException, ServiceUnavailableException {
+        URI service = recommendationServiceUrl()
+                .map(s -> s.resolve("/recommend/" + emailAddress))
+                .orElseThrow(ServiceUnavailableException::new);
+        return restTemplate
+                .getForEntity(service, SandwichPreferences.class)
+                .getBody();
+    }
+
+    public Optional<URI> recommendationServiceUrl() {
+        try {
+            return Optional.of(new URI("http://localhost:8081"));
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Sandwich> getSandwichesSortedByRecommendations(String phoneNr) throws ServiceUnavailableException {
+        SandwichPreferences preferences = getPreferences(phoneNr);
+        List<Sandwich> sandwiches = toList(repository.findAll());
+        Collections.sort(sandwiches, compareByRating(preferences));
+        return sandwiches;
+    }
+
+    public static <T> List<T> toList(final Iterable<T> iterable) {
+        return StreamSupport.stream(iterable.spliterator(), false)
+                .collect(Collectors.toList());
+    }
+
+    private Comparator<Sandwich> compareByRating(SandwichPreferences preferences) {
+        return (Sandwich sandwichA, Sandwich sandwichB) -> rating(preferences, sandwichB).compareTo(rating(preferences, sandwichA));
+    }
+
+    private Float rating(SandwichPreferences preferences, Sandwich sandwich) {
+        if (preferences.getRatingForSandwich(sandwich.getId()) != null){
+            return preferences.getRatingForSandwich(sandwich.getId());
+        }
+        return 0.0f;
+    }
 }

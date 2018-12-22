@@ -19,7 +19,6 @@ class DenTravakSandwichesOrderConfirmation extends DenTravakAbstractElement {
     }
 
     postPreference(order){
-        console.log("postPreference");
         var select = this.byId('rating');
         var score = select.options[select.selectedIndex].value;
         fetch('http://127.0.0.1:8081/recommend', {

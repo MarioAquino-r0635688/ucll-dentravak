@@ -4,18 +4,26 @@ class DenTravakSandwichesList extends DenTravakAbstractElement {
 
     connectedCallback() {
         super.connectedCallback();
-        fetch('http://127.0.0.1:8080/sandwiches')
-            .then(resp => resp.json())
-            .then(json => this.updateSandwichesList(json));
+        this.getlist();
+        this.app().addEventListener('show-sandwich-list', (e) => {
+            this.getlist();
+        })
     }
 
     updateSandwichesList(sandwiches) {
         let sandwichesList = this.byId('sandwiches');
+        sandwichesList.innerHTML = "";
         sandwiches.forEach(sandwich => {
             let sandwichEl = htmlToElement(this.getSandwichTemplate(sandwich));
             sandwichEl.addEventListener('click', () => this.app().dispatchEvent(new CustomEvent('checkout', {detail: sandwich})));
             sandwichesList.appendChild(sandwichEl);
         });
+    }
+
+    getlist(){
+        fetch('http://127.0.0.1:8080/sandwiches')
+        .then(resp => resp.json())
+        .then(json => this.updateSandwichesList(json));
     }
 
     get template() {

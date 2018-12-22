@@ -18,7 +18,6 @@ class DenTravakEditSandwich extends DenTravakAbstractElement {
     }
 
     saveSandwich() {
-        console.log(this.sandwich.id);
         if(this.sandwich.id == null){
             fetch('http://127.0.0.1:8080/sandwiches' , {
                 method: "POST",

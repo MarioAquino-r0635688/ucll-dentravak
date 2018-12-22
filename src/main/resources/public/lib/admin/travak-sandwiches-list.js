@@ -4,7 +4,6 @@ class DenTravakSandwichesList extends DenTravakAbstractElement {
 
     constructor() {
         super('travak-admin-app')
-        setInterval(this.update.bind(this), 1000);
     }
 
     connectedCallback() {
@@ -18,6 +17,10 @@ class DenTravakSandwichesList extends DenTravakAbstractElement {
     initEventListeners() {
         this.byId('new-sandwich-btn').addEventListener('click', () => this.app().showEditSandwich())
         this.byId('show-orders-btn').addEventListener('click', () => this.app().showOrderList())
+        this.app().addEventListener('save-succeeded', (e) => {
+            console.log("should come here");
+            this.update();
+        });
     }
 
     updateSandwichesList(sandwiches) {
@@ -31,7 +34,6 @@ class DenTravakSandwichesList extends DenTravakAbstractElement {
     }
 
     update(){
-        console.log("lalalallalalalala");
         fetch('http://127.0.0.1:8080/sandwiches')
             .then(resp => resp.json())
             .then(json => this.updateSandwichesList(json));

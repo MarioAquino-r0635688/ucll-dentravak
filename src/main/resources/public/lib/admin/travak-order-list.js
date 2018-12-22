@@ -23,6 +23,10 @@ class DenTravakOrderList extends DenTravakAbstractElement {
 
     initEventListeners() {
         this.byId('edit-sandwiches-btn').addEventListener('click', (e) => this.app().showSandwichList());
+        this.app().addEventListener('order-succeeded', (e) => {
+            console.log("should come here");
+            this.update();
+        });
     }
 
     updateOrderList(orders) {

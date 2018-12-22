@@ -18,19 +18,6 @@ class DenTravakApp extends DenTravakAbstractElement {
         this.addEventListener('show-sandwich-list', (e) => this.showSandwichList());
        // this.addEventListener('show-rate', (e) => this.postPreference(e.detail));
     }
-    /*
-    postPreference(order){
-        console.log("postPreference");
-        var select = this.byId('rating');
-        var score = select.options[select.selectedIndex].value;
-        fetch('http://127.0.0.1:8081/recommend', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json; charset=utf-8"
-            },
-            body: '{"emailAddress": "test@ucll.be", "ratedItem" : "' + order.sandwichId + '" "rating" : "' + score + '"}',
-        }).then(rsp => rsp.json());
-    }*/
 
     showSandwichList() {
         this.byCss(`travak-sandwiches-list`).classList.remove('hidden');

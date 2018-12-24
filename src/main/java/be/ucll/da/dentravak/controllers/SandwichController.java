@@ -4,12 +4,14 @@ import be.ucll.da.dentravak.model.Sandwich;
 import be.ucll.da.dentravak.model.SandwichPreferences;
 import be.ucll.da.dentravak.repositories.SandwichRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.inject.Inject;
 import javax.naming.ServiceUnavailableException;
 import java.math.BigDecimal;
 import java.net.URI;
@@ -22,8 +24,8 @@ import java.util.stream.StreamSupport;
 @RestController
 public class SandwichController {
 
-   /* @Inject
-    private DiscoveryClient discoveryClient;*/
+    @Inject
+    private DiscoveryClient discoveryClient;
 
     @Autowired
     private SandwichRepository repository;
@@ -88,12 +90,19 @@ public class SandwichController {
                 .getBody();
     }
 
-    public Optional<URI> recommendationServiceUrl() {
+   /* public Optional<URI> recommendationServiceUrl() {
         try {
             return Optional.of(new URI("http://localhost:8081"));
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
+    }*/
+
+    public Optional<URI> recommendationServiceUrl() {
+        return discoveryClient.getInstances("recommendation")
+                .stream()
+                .map(si -> si.getUri())
+                .findFirst();
     }
 
     private List<Sandwich> getSandwichesSortedByRecommendations(String phoneNr) throws ServiceUnavailableException {

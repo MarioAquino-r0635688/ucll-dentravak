@@ -13,10 +13,14 @@ class DenTravakApp extends DenTravakAbstractElement {
 
     initEventListeners() {
         this.addEventListener('checkout', (e) => this.showCheckoutPage(e.detail));
-       // this.addEventListener('rate', (e) =>this.postPreference(e.detail));
         this.addEventListener('order-succeeded', (e) => this.showOrderConfirmationPage(e.detail));
         this.addEventListener('show-sandwich-list', (e) => this.showSandwichList());
-       // this.addEventListener('show-rate', (e) => this.postPreference(e.detail));
+        this.addEventListener('show-personal-sandwich-list', (e) => this.showPersonalSandwichList(e.detail));
+    }
+
+    showPersonalSandwichList(number){
+        this.byCss(`travak-sandwiches-list`).showPersonalList(number);
+        this.showSandwichList();
     }
 
     showSandwichList() {

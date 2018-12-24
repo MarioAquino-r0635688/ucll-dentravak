@@ -2,11 +2,13 @@ package be.ucll.da.dentravak.controllers;
 
 import be.ucll.da.dentravak.model.SandwichOrder;
 import be.ucll.da.dentravak.repositories.SandwichOrderRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
-@CrossOrigin
+//@CrossOrigin
 @RestController
 public class SandwichOrderController {
 
@@ -16,15 +18,26 @@ public class SandwichOrderController {
         this.repository = repository;
     }
 
-    @RequestMapping("/orders")
-    public Iterable<SandwichOrder> orders() {
-        return repository.findAll();
+    @RequestMapping(value= "/orders")
+    public ResponseEntity orders(@RequestParam(value = "print", defaultValue = "false") boolean print) {
+        if(repository.findAll() == null){ return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
+        if(print == true){
+            for(SandwichOrder o : repository.findAll()){
+                o.setPrinted(true);
+                repository.save(o);
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(repository.findAll());
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(repository.findAll());
     }
 
     @RequestMapping(value = "/orders", method = RequestMethod.POST)
-    public SandwichOrder createSandwichOrder(@RequestBody SandwichOrder sandwichOrder) {
+    public ResponseEntity createSandwichOrder(@RequestBody SandwichOrder sandwichOrder) {
         sandwichOrder.setCreationDate(LocalDateTime.now());
-        return repository.save(sandwichOrder);
+        if(sandwichOrder == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(sandwichOrder));
     }
 
 

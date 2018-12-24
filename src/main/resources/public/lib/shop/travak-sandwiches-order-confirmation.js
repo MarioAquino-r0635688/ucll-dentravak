@@ -12,7 +12,7 @@ class DenTravakSandwichesOrderConfirmation extends DenTravakAbstractElement {
     }
 
     initEventListeners() {
-        this.byId('show-sandwich-list').addEventListener('click', e => this.app().dispatchEvent(new Event('show-sandwich-list')));
+        this.byId('show-sandwich-list').addEventListener('click', e => this.app().dispatchEvent(new CustomEvent('show-personal-sandwich-list', {detail: this.order.mobilePhoneNumber})));
         this.byId('rating').addEventListener('change', e => {
             this.postPreference(this.order);
         });
@@ -26,7 +26,7 @@ class DenTravakSandwichesOrderConfirmation extends DenTravakAbstractElement {
             headers: {
                 "Content-Type": "application/json; charset=utf-8"
             },
-            body: '{"emailAddress": "test@ucll.be", "ratedItem" : "' + order.sandwichId + '", "rating" : "' + score + '"}',
+            body: '{"emailAddress": "' + order.mobilePhoneNumber + '", "ratedItem" : "' + order.sandwichId + '", "rating" : "' + score + '"}',
         }).then(rsp => rsp.json());
     }
 

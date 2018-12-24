@@ -10,6 +10,13 @@ class DenTravakSandwichesList extends DenTravakAbstractElement {
         })
     }
 
+    showPersonalList(number){
+        fetch('http://127.0.0.1:8080/sandwiches/' + number)
+        .then(resp => resp.json())
+        .then(json => this.updateSandwichesList(json));
+        this.byId('personal').innerHTML = "Personal list of: " + number;
+    }
+
     updateSandwichesList(sandwiches) {
         let sandwichesList = this.byId('sandwiches');
         sandwichesList.innerHTML = "";
@@ -36,6 +43,7 @@ class DenTravakSandwichesList extends DenTravakAbstractElement {
             <div class="animate">
                 <h3>Welkom bij den Travak</h3>
                 <h4>Kies je broodje</h4>
+                <p id="personal"></p>
                 <div>
                 <ul id="sandwiches" class="list-group">
                 </ul>

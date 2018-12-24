@@ -26,6 +26,15 @@ public class SandwichOrder {
     private LocalDateTime creationDate;
     private BigDecimal price;
     private String mobilePhoneNumber;
+    private boolean printed = false;
+
+    public boolean isPrinted() {
+        return printed;
+    }
+
+    public void setPrinted(boolean printed) {
+        this.printed = printed;
+    }
 
     public UUID getId() {
         return id;

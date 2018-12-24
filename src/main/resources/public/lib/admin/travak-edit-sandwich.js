@@ -27,7 +27,7 @@ class DenTravakEditSandwich extends DenTravakAbstractElement {
                 },
                 body: '{"name":"' + this.byId('name').value + '", "ingredients":"' + this.byId('ingredients').value + '", "price":' + this.byId('price').value + '}',
                 
-            }).then(rsp => rsp.json());
+            }).then(rsp => rsp.json()).then(() => this.app().dispatchEvent(new CustomEvent('save-succeeded', {detail: this.sandwich})));
         }else{
             fetch('http://127.0.0.1:8080/sandwiches/' + this.sandwich.id , {
                 method: "PUT",
@@ -37,9 +37,8 @@ class DenTravakEditSandwich extends DenTravakAbstractElement {
                 },
                 body: '{"id": "' + this.sandwich.id + '", "name":"' + this.byId('name').value + '", "ingredients":"' + this.byId('ingredients').value + '", "price":' + this.byId('price').value + '}',
                 
-            }).then(rsp => rsp.json());
+            }).then(rsp => rsp.json()).then(() => this.app().dispatchEvent(new CustomEvent('save-succeeded', {detail: this.sandwich})));
         }
-        this.app().dispatchEvent(new CustomEvent('save-succeeded', {detail: this.sandwich}));
     }
 
     init(sandwich) {

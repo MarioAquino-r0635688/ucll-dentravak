@@ -4,6 +4,8 @@ import be.ucll.da.dentravak.model.Sandwich;
 import be.ucll.da.dentravak.model.SandwichPreferences;
 import be.ucll.da.dentravak.repositories.SandwichRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -20,7 +22,7 @@ import org.assertj.core.util.Lists;
 
 import static org.hibernate.internal.util.collections.ArrayHelper.toList;
 
-@CrossOrigin
+//@CrossOrigin
 @RestController
 public class SandwichController {
 
@@ -39,7 +41,7 @@ public class SandwichController {
         this.repository = repository;
         Sandwich sandwich = new Sandwich();
         sandwich.setName("kip hawaii");
-        sandwich.setIngredients("kip, curry");
+        sandwich.setIngredients("kip, cocktail");
         sandwich.setPrice(new BigDecimal("5.0"));
         Sandwich s = new Sandwich();
         s.setName("boulet");
@@ -50,27 +52,34 @@ public class SandwichController {
     }
 
     @RequestMapping("/sandwiches")
-    public Iterable<Sandwich> sandwiches() {
+    public ResponseEntity sandwiches() {
+        if(repository.findAll() == null ){ return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);}
+        return ResponseEntity.status(HttpStatus.OK).body(repository.findAll());
+    }
+
+    @RequestMapping("/sandwiches/{email}")
+    public ResponseEntity sandwichesByPreference(@PathVariable String email){
         try {
-            SandwichPreferences preferences = getPreferences("test@ucll.be");
+            SandwichPreferences preferences = getPreferences(email);
             if(preferences != null){
-                return getSandwichesSortedByRecommendations("test@ucll.be");
+                return ResponseEntity.status(HttpStatus.OK).body(getSandwichesSortedByRecommendations(email));
             }
-            return repository.findAll();
+            return sandwiches();
         } catch (ServiceUnavailableException e) {
-            return repository.findAll();
+            return sandwiches();
         }
     }
 
     @RequestMapping(value = "/sandwiches", method = RequestMethod.POST)
-    public Sandwich createSandwich(@RequestBody Sandwich sandwich) {
-        return repository.save(sandwich);
+    public ResponseEntity createSandwich(@RequestBody Sandwich sandwich) {
+        if(sandwich == null){return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();}
+        return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(sandwich));
     }
 
     @RequestMapping(value = "/sandwiches/{id}", method = RequestMethod.PUT)
-    public Sandwich updateSandwich(@PathVariable UUID id, @RequestBody Sandwich sandwich){
+    public ResponseEntity updateSandwich(@PathVariable UUID id, @RequestBody Sandwich sandwich){
         if(!id.equals(sandwich.getId())) throw new IllegalArgumentException("foei!");
-        return repository.save(sandwich);
+        return ResponseEntity.status(HttpStatus.OK).body(repository.save(sandwich));
     }
 
     @GetMapping("/getpreferences/{emailAddress}")
@@ -98,7 +107,7 @@ public class SandwichController {
         return sandwiches;
     }
 
-    public static <T> List<T> toList(final Iterable<T> iterable) {
+    private static <T> List<T> toList(final Iterable<T> iterable) {
         return StreamSupport.stream(iterable.spliterator(), false)
                 .collect(Collectors.toList());
     }

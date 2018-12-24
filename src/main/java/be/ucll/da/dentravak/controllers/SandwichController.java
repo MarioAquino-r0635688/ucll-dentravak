@@ -15,7 +15,6 @@ import javax.inject.Inject;
 import javax.naming.ServiceUnavailableException;
 import java.math.BigDecimal;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;

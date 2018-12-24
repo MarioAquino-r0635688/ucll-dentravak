@@ -6,7 +6,7 @@ spring:
       host: consul
       port: 8500
       discovery:
-        instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
+        instanceId: ${spring.application.name}:${random.value}
         healthCheckPath: /health-check
         healthCheckInterval: 20s
 server:

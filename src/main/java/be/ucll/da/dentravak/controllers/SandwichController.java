@@ -26,13 +26,13 @@ public class SandwichController {
     @Autowired
     private DiscoveryClient discoveryClient;
 
-    @Autowired
-    private SandwichRepository repository;
+   // @Autowired
+   // private SandwichRepository repository;
 
     @Autowired
     private RestTemplate restTemplate;
 
- //   private SandwichRepository repository;
+    private SandwichRepository repository;
 
     public SandwichController(SandwichRepository repository) {
         this.repository = repository;

@@ -23,7 +23,7 @@ import java.util.stream.StreamSupport;
 @RestController
 public class SandwichController {
 
-    @Inject
+    @Autowired
     private DiscoveryClient discoveryClient;
 
     @Autowired

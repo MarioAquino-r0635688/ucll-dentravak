@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import javax.inject.Inject;
 import javax.naming.ServiceUnavailableException;
 import java.math.BigDecimal;
 import java.net.URI;

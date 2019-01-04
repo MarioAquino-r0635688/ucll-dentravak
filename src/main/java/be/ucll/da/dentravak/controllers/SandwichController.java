@@ -82,7 +82,7 @@ public class SandwichController {
     @GetMapping("/getpreferences/{emailAddress}")
     public SandwichPreferences getPreferences(@PathVariable String emailAddress) throws RestClientException, ServiceUnavailableException {
         URI service = recommendationServiceUrl()
-                .map(s -> s.resolve("/recommend/" + emailAddress))
+                .map(s -> s.resolve("/recommendation/recommend/" + emailAddress))
                 .orElseThrow(ServiceUnavailableException::new);
         return restTemplate
                 .getForEntity(service, SandwichPreferences.class)

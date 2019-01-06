@@ -21,7 +21,7 @@ class DenTravakSandwichesOrderConfirmation extends DenTravakAbstractElement {
     postPreference(order){
         var select = this.byId('rating');
         var score = select.options[select.selectedIndex].value;
-        fetch('http://127.0.0.1:8081/recommend', {
+        fetch('http://127.0.0.1:8081/recommendation/recommend', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json; charset=utf-8"

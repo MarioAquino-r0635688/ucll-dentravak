@@ -23,7 +23,6 @@ class DenTravakEditSandwich extends DenTravakAbstractElement {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
-                    // "Content-Type": "application/x-www-form-urlencoded",
                 },
                 body: '{"name":"' + this.byId('name').value + '", "ingredients":"' + this.byId('ingredients').value + '", "price":' + this.byId('price').value + '}',
                 
@@ -33,7 +32,6 @@ class DenTravakEditSandwich extends DenTravakAbstractElement {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
-                    // "Content-Type": "application/x-www-form-urlencoded",
                 },
                 body: '{"id": "' + this.sandwich.id + '", "name":"' + this.byId('name').value + '", "ingredients":"' + this.byId('ingredients').value + '", "price":' + this.byId('price').value + '}',
                 

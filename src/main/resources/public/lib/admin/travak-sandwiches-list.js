@@ -8,9 +8,7 @@ class DenTravakSandwichesList extends DenTravakAbstractElement {
 
     connectedCallback() {
         super.connectedCallback();
-        fetch('http://127.0.0.1:8080/sandwiches')
-            .then(resp => resp.json())
-            .then(json => this.updateSandwichesList(json));
+        this.update();
         this.initEventListeners();
     }
 
@@ -18,7 +16,6 @@ class DenTravakSandwichesList extends DenTravakAbstractElement {
         this.byId('new-sandwich-btn').addEventListener('click', () => this.app().showEditSandwich())
         this.byId('show-orders-btn').addEventListener('click', () => this.app().showOrderList())
         this.app().addEventListener('save-succeeded', (e) => {
-            console.log("1");
             this.update();
         });
     }
@@ -34,7 +31,6 @@ class DenTravakSandwichesList extends DenTravakAbstractElement {
     }
 
     update(){
-        console.log("2");
         fetch('http://127.0.0.1:8080/sandwiches')
             .then(resp => resp.json())
             .then(json => this.updateSandwichesList(json));

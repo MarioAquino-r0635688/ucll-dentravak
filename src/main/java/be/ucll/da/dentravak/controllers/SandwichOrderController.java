@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 
 @RestController
+@CrossOrigin
 public class SandwichOrderController {
 
     private SandwichOrderRepository repository;
@@ -19,15 +20,16 @@ public class SandwichOrderController {
 
     @RequestMapping(value= "/orders")
     public ResponseEntity orders(@RequestParam(value = "print", defaultValue = "false") boolean print) {
-        if(repository.findAllByCreationDateIsAfter(LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)) == null){ return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
+        LocalDateTime today = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        if(repository.findAllByCreationDateIsAfter(today) == null){ return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
         if(print == true){
-            for(SandwichOrder o : repository.findAllByCreationDateIsAfter(LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0))){
+            for(SandwichOrder o : repository.findAllByCreationDateIsAfter(today)){
                 o.setPrinted(true);
                 repository.save(o);
             }
-            return ResponseEntity.status(HttpStatus.OK).body(repository.findAllByCreationDateIsAfter(LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)));
+            return ResponseEntity.status(HttpStatus.OK).body(repository.findAllByCreationDateIsAfter(today));
         }
-        return ResponseEntity.status(HttpStatus.OK).body(repository.findAllByCreationDateIsAfter(LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)));
+        return ResponseEntity.status(HttpStatus.OK).body(repository.findAllByCreationDateIsAfter(today));
     }
 
     @RequestMapping(value = "/orders", method = RequestMethod.POST)

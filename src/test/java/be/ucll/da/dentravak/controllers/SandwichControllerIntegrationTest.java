@@ -37,7 +37,7 @@ public class SandwichControllerIntegrationTest extends AbstractControllerIntegra
 
         assertThatJson(actualSandwiches).isEqualTo(expectedSandwiches);
     }
-//testing
+
     @Test
     public void testPostSandwich() throws JSONException {
         Sandwich sandwich = aSandwich().withName("Americain").withIngredients("Vlees").withPrice(4.0).build();

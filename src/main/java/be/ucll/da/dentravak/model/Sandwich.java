@@ -49,5 +49,41 @@ public class Sandwich {
         this.price = price;
     }
 
+    public static class SandwichBuilder {
 
+        private String name;
+        private BigDecimal price;
+        private String ingredients;
+        private UUID SWID;
+
+        public SandwichBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public SandwichBuilder withPrice(BigDecimal price) {
+            this.price = price;
+            return this;
+        }
+
+        public SandwichBuilder withIngredients(String ingredients) {
+            this.ingredients = ingredients;
+            return this;
+        }
+
+
+        public SandwichBuilder withSWID(UUID SWID) {
+            this.SWID = SWID;
+            return this;
+        }
+
+        public Sandwich build(){
+            Sandwich sw = new Sandwich();
+            sw.ingredients = this.ingredients;
+            sw.name = this.name;
+            sw.price = this.price;
+            return sw;
+        }
+
+    }
 }

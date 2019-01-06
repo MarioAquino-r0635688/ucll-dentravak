@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @RestController
+@CrossOrigin
 public class SandwichController {
 
    /* @Autowired
@@ -29,20 +30,16 @@ public class SandwichController {
     @Autowired
     private RestTemplate restTemplate;
 
-   // private SandwichRepository repository;
-
     public SandwichController(SandwichRepository repository) {
         this.repository = repository;
-        Sandwich sandwich = new Sandwich();
-        sandwich.setName("kip hawaii");
-        sandwich.setIngredients("kip, cocktail");
-        sandwich.setPrice(new BigDecimal("5.0"));
-        Sandwich s = new Sandwich();
-        s.setName("boulet");
-        s.setIngredients("boulet, mayo");
-        s.setPrice(new BigDecimal("8.3"));
-        repository.save(sandwich);
-        repository.save(s);
+        AddSandwichExamples();
+    }
+
+    private void AddSandwichExamples(){
+        Sandwich sandwich1 = new Sandwich.SandwichBuilder().withName("kip hawaii").withIngredients("kip, cocktail").withPrice(new BigDecimal("5.0")).build();
+        Sandwich sandwich2 = new Sandwich.SandwichBuilder().withName("boulet").withIngredients("boulet, mayo").withPrice(new BigDecimal("8.3")).build();
+        this.repository.save(sandwich1);
+        this.repository.save(sandwich2);
     }
 
     @RequestMapping("/sandwiches")

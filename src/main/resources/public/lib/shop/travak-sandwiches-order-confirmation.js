@@ -56,7 +56,7 @@ class DenTravakSandwichesOrderConfirmation extends DenTravakAbstractElement {
                 <p>Tot zo dadelijk!</p>
                 <p>Rate uw broodje</p>
                 <div>
-                    <select id="rating">
+                    <select id="rating" class="custom-select custom-select-sm mb-3">
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>

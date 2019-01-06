@@ -19,15 +19,15 @@ public class SandwichOrderController {
 
     @RequestMapping(value= "/orders")
     public ResponseEntity orders(@RequestParam(value = "print", defaultValue = "false") boolean print) {
-        if(repository.findAll() == null){ return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
+        if(repository.findAllByCreationDateIsAfter(LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)) == null){ return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
         if(print == true){
-            for(SandwichOrder o : repository.findAll()){
+            for(SandwichOrder o : repository.findAllByCreationDateIsAfter(LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0))){
                 o.setPrinted(true);
                 repository.save(o);
             }
-            return ResponseEntity.status(HttpStatus.OK).body(repository.findAll());
+            return ResponseEntity.status(HttpStatus.OK).body(repository.findAllByCreationDateIsAfter(LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)));
         }
-        return ResponseEntity.status(HttpStatus.OK).body(repository.findAll());
+        return ResponseEntity.status(HttpStatus.OK).body(repository.findAllByCreationDateIsAfter(LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)));
     }
 
     @RequestMapping(value = "/orders", method = RequestMethod.POST)
